@@ -1,49 +1,55 @@
 import React, { useState } from "react";
-import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 
 const Task = () => {
     const [lista, setLista] = useState([]);
     const [task, setTask] = useState("");
 
-    const handleAddTask = (e) => {
-        e.preventDefault();
-        if (task.trim() === "") return;
+    const handleAddTask = () => {
+        if (task.trim() === "") return; // Evitar agregar tareas vacías
 
         const nuevaTarea = {
-            id: Date.now(),
+            id: Date.now(), // Usamos el timestamp como ID único
             label: task,
             is_done: false
         };
 
-        setLista([...lista, nuevaTarea]);
-        setTask("");
+        setLista([...lista, nuevaTarea]); // Agregar la nueva tarea al arreglo
+        setTask(""); // Limpiar el input
     };
 
     const handleDeleteTask = (id) => {
-        const nuevasTareas = lista.filter((tarea) => tarea.id !== id);
+        const nuevasTareas = lista.filter((tarea) => tarea.id !== id); // Filtrar el arreglo para eliminar la tarea
         setLista(nuevasTareas);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") { // Verificar si la tecla presionada es "Enter"
+            handleAddTask(); // Llamar a la función para agregar la tarea
+        }
     };
 
     return (
         <>
             <h1>To Do List</h1>
             <div className="container-md">
+                {/* Input para agregar tareas */}
                 <input
                     className="rounded-pill mb-2"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
+                    onKeyDown={handleKeyDown} // Escuchar el evento onKeyDown
                     type="text"
+                    placeholder="Escribe una tarea y presiona Enter"
                 /><br />
-                <Button className="mb-2" variant="success" onClick={handleAddTask}>
-                    Agregar Tarea
-                </Button>
-                <ListGroup as="ol" numbered>
+                {/* Lista de tareas */}
+                <ListGroup as="ol" Numbered>
                     {lista.map((tarea) => (
                         <ListGroup.Item
                             as="li"
-                            className="mb-2 d-flex justify-content-between align-items-center task-item"
+                            className="mb-2 d-flex justify-content-center align-items-center task-item"
                             key={tarea.id}
                         >
                             {tarea.label}
@@ -58,6 +64,7 @@ const Task = () => {
                         </ListGroup.Item>
                     ))}
                 </ListGroup>
+                {/* Alerta con el número de tareas pendientes */}
                 <Alert variant="warning">
                     <Alert.Heading>Pending Tasks: {lista.length}</Alert.Heading>
                 </Alert>
