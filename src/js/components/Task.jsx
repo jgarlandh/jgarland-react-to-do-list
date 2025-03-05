@@ -37,7 +37,7 @@ const Task = () => {
             <div className="container-md">
                 {/* Input para agregar tareas */}
                 <input
-                    className="rounded-pill mb-2"
+                    className="rounded-pill mb-2 w-100 text-center"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
                     onKeyDown={handleKeyDown} // Escuchar el evento onKeyDown
@@ -45,11 +45,11 @@ const Task = () => {
                     placeholder="Escribe una tarea y presiona Enter"
                 /><br />
                 {/* Lista de tareas */}
-                <ListGroup as="ol" Numbered>
+                <ListGroup as="ol" numbered>
                     {lista.map((tarea) => (
                         <ListGroup.Item
                             as="li"
-                            className="mb-2 d-flex justify-content-center align-items-center task-item"
+                            className="mb-2 d-flex justify-content-between align-items-center task-item"
                             key={tarea.id}
                         >
                             {tarea.label}
@@ -64,9 +64,11 @@ const Task = () => {
                         </ListGroup.Item>
                     ))}
                 </ListGroup>
-                {/* Alerta con el número de tareas pendientes */}
-                <Alert variant="warning">
-                    <Alert.Heading>Pending Tasks: {lista.length}</Alert.Heading>
+                {/* Alerta con el número de tareas pendientes o mensaje si no hay tareas */}
+                <Alert variant="warning" className="mt-3 text-center">
+                    <Alert.Heading>
+                        {lista.length === 0 ? "No hay tareas, añadir tareas" : `Tareas pendientes: ${lista.length}`}
+                    </Alert.Heading>
                 </Alert>
             </div>
 
