@@ -4,32 +4,24 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert';
 
 const Task = () => {
-    // Estado para almacenar la lista de tareas
     const [lista, setLista] = useState([]);
-    // Estado para almacenar el valor del input
     const [task, setTask] = useState("");
 
-    // Función para agregar una nueva tarea
     const handleAddTask = (e) => {
         e.preventDefault();
-        if (task.trim() === "") return; // Evitar agregar tareas vacías
+        if (task.trim() === "") return;
 
-        // Crear un nuevo objeto de tarea
         const nuevaTarea = {
-            id: Date.now(), // Usamos el timestamp como ID único
+            id: Date.now(),
             label: task,
             is_done: false
         };
 
-        // Agregar la nueva tarea al arreglo
         setLista([...lista, nuevaTarea]);
-        // Limpiar el input
         setTask("");
     };
 
-    // Función para eliminar una tarea
     const handleDeleteTask = (id) => {
-        // Filtrar el arreglo para eliminar la tarea con el ID correspondiente
         const nuevasTareas = lista.filter((tarea) => tarea.id !== id);
         setLista(nuevasTareas);
     };
@@ -38,34 +30,61 @@ const Task = () => {
         <>
             <h1>To Do List</h1>
             <div className="container-md">
-                {/* Input para agregar tareas */}
                 <input
                     className="rounded-pill mb-2"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
                     type="text"
                 /><br />
-                {/* Botón para agregar tareas */}
                 <Button className="mb-2" variant="success" onClick={handleAddTask}>
                     Agregar Tarea
                 </Button>
-                {/* Lista de tareas */}
                 <ListGroup as="ol" numbered>
                     {lista.map((tarea) => (
-                        <ListGroup.Item as="li" className="mb-2" key={tarea.id}>
+                        <ListGroup.Item
+                            as="li"
+                            className="mb-2 d-flex justify-content-between align-items-center task-item"
+                            key={tarea.id}
+                        >
                             {tarea.label}
-                            {/* Botón para eliminar tareas */}
-                            <Button variant="secondary" onClick={() => handleDeleteTask(tarea.id)}>
-                            <i className="fa-solid fa-trash mb-2 fs-6"></i>
+                            {/* Botón de basurero (oculto por defecto) */}
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleDeleteTask(tarea.id)}
+                                className="delete-button"
+                            >
+                                <i className="fa-solid fa-trash mb-2 fs-6"></i>
                             </Button>
                         </ListGroup.Item>
                     ))}
                 </ListGroup>
-                {/* Alerta con el número de tareas pendientes */}
                 <Alert variant="warning">
                     <Alert.Heading>Pending Tasks: {lista.length}</Alert.Heading>
                 </Alert>
             </div>
+
+            {/* Estilos CSS */}
+            <style>
+                {`
+                    .task-item {
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+
+                    .task-item:hover {
+                        background-color: #f8f9fa; /* Cambia el fondo al hacer hover */
+                    }
+
+                    .delete-button {
+                        opacity: 0; /* Oculto por defecto */
+                        transition: opacity 0.3s; /* Transición suave */
+                    }
+
+                    .task-item:hover .delete-button {
+                        opacity: 1; /* Muestra el botón al hacer hover sobre la tarea */
+                    }
+                `}
+            </style>
         </>
     );
 };
